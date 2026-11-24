@@ -1,0 +1,9 @@
+# Code-execution service: same Python and packages as the Harbor task image.
+FROM python:3.10-slim-bookworm
+ENV PIP_NO_CACHE_DIR=1 PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+RUN apt-get update && apt-get install -y --no-install-recommends libgomp1 && rm -rf /var/lib/apt/lists/*
+COPY requirements-runtime.txt /tmp/requirements.txt
+RUN pip install --extra-index-url https://download.pytorch.org/whl/cpu -r /tmp/requirements.txt && rm /tmp/requirements.txt
+COPY sandbox_server.py /opt/sandbox_server.py
+EXPOSE 8080
+CMD ["python3", "/opt/sandbox_server.py", "8080"]

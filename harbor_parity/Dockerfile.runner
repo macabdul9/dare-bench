@@ -1,0 +1,12 @@
+# Original DARE-Bench harness (scripts/), unchanged, plus a vllm import stub.
+FROM python:3.10-slim-bookworm
+ENV PIP_NO_CACHE_DIR=1 PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+RUN apt-get update && apt-get install -y --no-install-recommends libgomp1 && rm -rf /var/lib/apt/lists/*
+COPY requirements-runtime.txt /tmp/requirements.txt
+RUN pip install --extra-index-url https://download.pytorch.org/whl/cpu -r /tmp/requirements.txt \
+    && pip install hydra-core==1.3.2 omegaconf==2.3.0 tenacity==8.2.3 openai==1.109.1 anthropic==0.39.0 \
+       transformers==4.46.3 tqdm==4.66.4 python-dotenv==1.0.1 httpx==0.27.2 \
+    && rm /tmp/requirements.txt
+COPY vllm /opt/stubs/vllm
+ENV PYTHONPATH=/opt/stubs
+WORKDIR /dare/scripts
