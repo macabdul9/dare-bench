@@ -414,9 +414,9 @@ class OpenAIResponsesClient(BaseRemoteAPILLM):
             self.model_name = "o3"
             self.reasoning_effort = config.get("reasoning_effort", "low")
             self.reasoning_summary = config.get("reasoning_summary", "auto")
-        elif self.model_name == "gpt-5":
+        elif self.model_name == "gpt-5" or self.model_name.startswith("gpt-6"):  # harbor-parity: GPT-6 alias
             # Keep model name as-is for Responses API, default to medium reasoning
-            self.model_name = "gpt-5"
+            # harbor-parity: name kept as given (was a no-op `= "gpt-5"` that would rename GPT-6)
             self.reasoning_effort = config.get("reasoning_effort", "medium")
             self.reasoning_summary = config.get("reasoning_summary", "auto")
             # Text verbosity control for gpt-5 Responses API
@@ -477,7 +477,7 @@ class OpenAIResponsesClient(BaseRemoteAPILLM):
                 },
             }
             # Only gpt-5 supports text verbosity in Responses API
-            if self.model_name == "gpt-5":
+            if self.model_name == "gpt-5" or self.model_name.startswith("gpt-6"):  # harbor-parity
                 verbosity = (self.text_verbosity or "medium").lower()
                 if verbosity not in {"low", "medium", "high"}:
                     verbosity = "medium"

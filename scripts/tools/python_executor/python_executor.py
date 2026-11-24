@@ -170,7 +170,7 @@ class python_executor(BaseTool):
                 "description": self.__class__.tool_description.format(**payload),
                 "input_schema": self.__class__.tool_parameters,
             }
-        elif (model in ["gpt-o4-mini", "gpt-o3", "gpt-5"]) or ("gpt-oss" in model.lower()):
+        elif (model in ["gpt-o4-mini", "gpt-o3", "gpt-5"]) or model.startswith("gpt-6") or ("gpt-oss" in model.lower()):  # harbor-parity: GPT-6 alias
             return {
                 "type": "function",
                 "name": self.__class__.name,

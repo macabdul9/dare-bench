@@ -43,7 +43,7 @@ def initialize_model(config):
         )
     else:
         # Remote model initialization
-        if config.remote_model in ["gpt-o4-mini", "gpt-o3", "gpt-5"]:
+        if config.remote_model in ["gpt-o4-mini", "gpt-o3", "gpt-5"] or config.remote_model.startswith("gpt-6"):  # harbor-parity: GPT-6 uses the gpt-5 path
             tokenizer = None  # GPT models do not require a tokenizer
             llm = OpenAIResponsesClient(model_name=config.remote_model, config=config)
         elif "gpt-oss" in config.remote_model.lower():
